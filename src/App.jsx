@@ -2,6 +2,8 @@ import { useRef, useEffect, useState } from "react";
 import "./App.css";
 import * as faceapi from "face-api.js";
 import { nanoid } from "nanoid";
+import { averageEmotions } from "../components/averageEmotionValue";
+import { averageEmotionsRounded } from "../components/averageEmotionValue";
 
 function App() {
   // const [emotions, setEmotions] = useState([]);
@@ -87,7 +89,8 @@ function App() {
     }, 1000);
   };
   console.log("emotionArray", emotionsArray);
-
+  console.log("averageEmotions", averageEmotions);
+  console.log("averageEmotionsRounded", averageEmotionsRounded);
   return (
     <div className="myapp">
       <h1>Emotion Detection</h1>

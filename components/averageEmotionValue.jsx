@@ -1,4 +1,4 @@
-import data from "../src/assets/emotionArrayTest.json";
+import data from "../emotionArrayTest.json";
 
 if (!data || !Array.isArray(data)) {
   console.error("Invalid or missing data.");
@@ -36,9 +36,17 @@ data.forEach((entry) => {
 });
 
 // Calculate the average for each emotion
-const averageEmotions = {};
+export const averageEmotions = {};
 Object.keys(sumEmotions).forEach((emotion) => {
   averageEmotions[emotion] = sumEmotions[emotion] / countEmotions[emotion];
+});
+
+export const averageEmotionsRounded = {};
+Object.keys(sumEmotions).forEach((emotion) => {
+  // Round to 2 decimal places
+  averageEmotionsRounded[emotion] = +(
+    sumEmotions[emotion] / countEmotions[emotion]
+  ).toFixed(2);
 });
 
 console.log("Average Emotions:", averageEmotions);
