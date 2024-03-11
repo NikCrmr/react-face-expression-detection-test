@@ -1,10 +1,15 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import "./App.css";
 import * as faceapi from "face-api.js";
+import { nanoid } from "nanoid";
 
 function App() {
+  // const [emotions, setEmotions] = useState([]);
+  const [emotionsArray, setEmotionsArray] = useState([]);
   const videoRef = useRef();
   const canvasRef = useRef();
+  //EXPRESSION REF
+  const expressionsRef = useRef({});
 
   // LOAD FROM USEEFFECT
   useEffect(() => {
@@ -44,18 +49,36 @@ function App() {
         .withFaceLandmarks()
         .withFaceExpressions();
 
+      //SAVE TO ARRAY OF 20 objects
+      if (detections.length > 0) {
+        const expressions = detections[0].expressions;
+        expressionsRef.current = expressions;
+        // Use the functional form of setEmotionsArray to correctly update based on the previous state
+        setEmotionsArray((prevEmotionsArray) => {
+          const newEmotionsArray = [
+            ...prevEmotionsArray.slice(-20 + 1),
+            {
+              id: nanoid(),
+              experiences: expressions,
+            },
+          ];
+          return newEmotionsArray;
+        });
+        expressionsRef.current = expressions;
+      }
+
       // DRAW YOU FACE IN WEBCAM
       canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
         videoRef.current
       );
       faceapi.matchDimensions(canvasRef.current, {
-        width: 940,
-        height: 650,
+        width: 846,
+        height: 585,
       });
 
       const resized = faceapi.resizeResults(detections, {
-        width: 940,
-        height: 650,
+        width: 846,
+        height: 585,
       });
 
       faceapi.draw.drawDetections(canvasRef.current, resized);
@@ -63,6 +86,7 @@ function App() {
       faceapi.draw.drawFaceExpressions(canvasRef.current, resized);
     }, 1000);
   };
+  console.log("emotionArray", emotionsArray);
 
   return (
     <div className="myapp">
@@ -71,6 +95,14 @@ function App() {
         <video crossOrigin="anonymous" ref={videoRef} autoPlay></video>
       </div>
       <canvas ref={canvasRef} width="940" height="650" className="appcanvas" />
+      <div className="emotionsBox">
+        {/* Display each key-value pair in a separate <span> */}
+        {Object.keys(expressionsRef.current).map((key) => (
+          <span className="keyValueSpan" key={nanoid()}>
+            {key}: {expressionsRef.current[key]},{" "}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
