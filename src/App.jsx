@@ -4,7 +4,7 @@ import * as faceapi from "face-api.js";
 import { nanoid } from "nanoid";
 // import { averageEmotions } from "../components/AverageEmotionValue";
 // import { averageEmotionsRounded } from "../components/AverageEmotionValue";
-import EmotionAnalysisComponent from "../components/averageEmotionValue";
+import EmotionAnalysisComponent from "../components/AverageEmotion";
 
 function App() {
   // const [emotions, setEmotions] = useState([]);
