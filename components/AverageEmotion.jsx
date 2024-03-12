@@ -8,7 +8,7 @@ const getEmotionColor = (emotion) => {
     angry: "red",
     sad: "blue",
     fearful: "mediumorchid",
-    disgust: "green",
+    disgusted: "green",
     surprised: "lightblue",
     // Add more emotions and colors as needed
   };
@@ -22,7 +22,7 @@ const getEmotionTextColor = (emotion) => {
     angry: "yellow",
     sad: "Black",
     fearful: "yellow",
-    disgust: "black",
+    disgusted: "black",
     surprised: "black",
     // Add more emotions and colors as needed
   };
