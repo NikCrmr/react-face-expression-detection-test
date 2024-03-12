@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 // import { averageEmotions } from "../components/AverageEmotionValue";
 // import { averageEmotionsRounded } from "../components/AverageEmotionValue";
 import EmotionAnalysisComponent from "../components/AverageEmotion";
+import SmileTrainer from "../components/SmileTrainer";
 
 function App() {
   // const [emotions, setEmotions] = useState([]);
@@ -108,6 +109,7 @@ function App() {
         ))}
       </div>
       <EmotionAnalysisComponent data={emotionsArray} />
+      <SmileTrainer x={expressionsRef} />
     </div>
   );
 }
