@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import "./App.css";
 import * as faceapi from "face-api.js";
 import { nanoid } from "nanoid";
+import styled from "styled-components";
 // import { averageEmotions } from "../components/AverageEmotionValue";
 // import { averageEmotionsRounded } from "../components/AverageEmotionValue";
 import EmotionAnalysisComponent from "../components/AverageEmotion";
@@ -10,6 +11,8 @@ import DynamicSizeDiv from "../components/AvarageEmotionVisualisation";
 
 function App() {
   // const [emotions, setEmotions] = useState([]);
+  const [facesDetected, setFacesDetected] = useState(false);
+
   const [emotionsArray, setEmotionsArray] = useState([]);
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -53,6 +56,11 @@ function App() {
         .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceExpressions();
+
+      // Check if faces are detected
+      const facesAreDetected = detections.length > 0;
+      // Update state to reflect whether faces are detected or not
+      setFacesDetected(facesAreDetected);
 
       //SAVE TO ARRAY OF 20 objects
       if (detections.length > 0) {
@@ -109,11 +117,29 @@ function App() {
           </span>
         ))}
       </div>
-      <EmotionAnalysisComponent data={emotionsArray} />
+      {facesDetected ? (
+        <EmotionAnalysisComponent data={emotionsArray} />
+      ) : (
+        <StyledNoFaceDetected>NO FACE DETECTED</StyledNoFaceDetected>
+      )}
+
       <DynamicSizeDiv />
-      <SmileTrainer x={expressionsRef} />
+      {facesDetected ? (
+        <SmileTrainer x={expressionsRef} />
+      ) : (
+        <StyledNoFaceDetected>NO FACE DETECTED</StyledNoFaceDetected>
+      )}
     </div>
   );
 }
+
+const StyledNoFaceDetected = styled.p`
+  background-color: red;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 1rem;
+  border: 2px dotted yellow;
+`;
 
 export default App;
