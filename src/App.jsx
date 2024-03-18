@@ -2,9 +2,17 @@ import { useRef, useEffect, useState } from "react";
 import "./App.css";
 import * as faceapi from "face-api.js";
 import { nanoid } from "nanoid";
+import styled from "styled-components";
+// import { averageEmotions } from "../components/AverageEmotionValue";
+// import { averageEmotionsRounded } from "../components/AverageEmotionValue";
+import EmotionAnalysisComponent from "../components/AverageEmotion";
+import SmileTrainer from "../components/SmileTrainer";
+import DynamicSizeDiv from "../components/AvarageEmotionVisualisation";
 
 function App() {
   // const [emotions, setEmotions] = useState([]);
+  const [facesDetected, setFacesDetected] = useState(false);
+
   const [emotionsArray, setEmotionsArray] = useState([]);
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -49,6 +57,11 @@ function App() {
         .withFaceLandmarks()
         .withFaceExpressions();
 
+      // Check if faces are detected
+      const facesAreDetected = detections.length > 0;
+      // Update state to reflect whether faces are detected or not
+      setFacesDetected(facesAreDetected);
+
       //SAVE TO ARRAY OF 20 objects
       if (detections.length > 0) {
         const expressions = detections[0].expressions;
@@ -56,7 +69,7 @@ function App() {
         // Use the functional form of setEmotionsArray to correctly update based on the previous state
         setEmotionsArray((prevEmotionsArray) => {
           const newEmotionsArray = [
-            ...prevEmotionsArray.slice(-20 + 1),
+            ...prevEmotionsArray.slice(-100 + 1),
             {
               id: nanoid(),
               experiences: expressions,
@@ -84,10 +97,11 @@ function App() {
       faceapi.draw.drawDetections(canvasRef.current, resized);
       faceapi.draw.drawFaceLandmarks(canvasRef.current, resized);
       faceapi.draw.drawFaceExpressions(canvasRef.current, resized);
-    }, 1000);
+    }, 200);
   };
   console.log("emotionArray", emotionsArray);
-
+  // console.log("averageEmotions", averageEmotions);
+  // console.log("averageEmotionsRounded", averageEmotionsRounded);
   return (
     <div className="myapp">
       <h1>Emotion Detection</h1>
@@ -103,8 +117,29 @@ function App() {
           </span>
         ))}
       </div>
+      {facesDetected ? (
+        <EmotionAnalysisComponent data={emotionsArray} />
+      ) : (
+        <StyledNoFaceDetected>NO FACE DETECTED</StyledNoFaceDetected>
+      )}
+
+      <DynamicSizeDiv />
+      {facesDetected ? (
+        <SmileTrainer x={expressionsRef} />
+      ) : (
+        <StyledNoFaceDetected>NO FACE DETECTED</StyledNoFaceDetected>
+      )}
     </div>
   );
 }
+
+const StyledNoFaceDetected = styled.p`
+  background-color: red;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 1rem;
+  border: 2px dotted yellow;
+`;
 
 export default App;
